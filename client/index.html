@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>My Web Page</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+      <h1>🎨 Canvas Drawing App</h1>
+    
+    <div class="toolbar">
+        <div class="tool-group">
+            <label>Tool:</label>
+            <button id="brushBtn" class="active">✏️ Brush</button>
+            <button id="eraserBtn">🧹 Eraser</button>
+        </div>
+
+        <div class="tool-group">
+            <label>Color:</label>
+            <input type="color" id="colorPicker" value="#000000">
+        </div>
+
+        <div class="tool-group">
+            <label>Size: <span id="sizeValue">5</span>px</label>
+            <input type="range" id="brushSize" min="1" max="50" value="5">
+        </div>
+
+        <div class="tool-group">
+            <button id="undoBtn">↶ Undo</button>
+            <button id="redoBtn">↷ Redo</button>
+            <button id="clearBtn">🗑️ Clear</button>
+        </div>
+    </div>
+
+    <div id="canvas-container">
+        <canvas id="myCanvas" width="800" height="600"></canvas>
+    </div>
+
+    <div class="info">
+        💡 Try drawing, changing colors, adjusting brush size, and using undo/redo!
+    </div>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="websocket.js"></script>
+    <script src="canvas.js"></script>
+    <script src="main.js"></script>
+</body>
+</html>
