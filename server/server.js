@@ -1,6 +1,7 @@
 const express = require("express");
 const http = require("http");
 const { Server } = require("socket.io");
+const path = require("path");
 
 const { createRoom, getRoom, removeUserFromRoom } = require("./rooms");
 const {
@@ -28,12 +29,10 @@ io.on("connection", (socket) => {
       strokes: getStrokes(roomId),
       users: Array.from(room.users.values())
     });
-
     socket.to(roomId).emit("USER_JOINED", user);
   });
 
   socket.on("DRAW_UPDATE", ({ roomId, strokeFragment }) => {
-    console.log(strokeFragment);
     socket.to(roomId).emit("STROKE_UPDATE", strokeFragment);
   });
 
@@ -43,6 +42,7 @@ io.on("connection", (socket) => {
   });
 
   socket.on("UNDO", ({ roomId }) => {
+    console.log("UNDO clicked");
     const removedStroke = undo(roomId);
     if (removedStroke) {
       io.to(roomId).emit("UNDO_APPLIED", removedStroke.id);
@@ -71,9 +71,11 @@ io.on("connection", (socket) => {
     console.log("User disconnected:", socket.id);
   });
 });
-
-
-app.use(express.static("../client"));
+app.use(
+  express.static(
+    path.join(__dirname, "../client")
+  )
+);
 server.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });

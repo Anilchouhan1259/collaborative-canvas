@@ -12,10 +12,7 @@ ws.on("STROKE_COMMITTED", (stroke) => {
 
 ws.on("STROKE_UPDATE", ({ id, point }) => {
   let stroke = strokes.find(s => s.id === id);
-  if (!stroke) {
-    stroke = { id, points: [] };
-    strokes.push(stroke);
-  }
+  if (!stroke )return;
   stroke.points.push(point);
   redrawAll(strokes);
 });
@@ -32,11 +29,3 @@ ws.on("REDO_APPLIED", (stroke) => {
   strokes.push(stroke);
   redrawAll(strokes);
 });
-document.getElementById("undoBtn").onclick = () => {
-  ws.send("UNDO", { roomId: ws.ROOM_ID });
-  redrawAll(strokes);
-};
-
-document.getElementById("redoBtn").onclick = () => {
-  ws.send("REDO", { roomId: ws.ROOM_ID });
-};

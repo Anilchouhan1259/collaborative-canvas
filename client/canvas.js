@@ -60,6 +60,7 @@
         redoBtn.addEventListener('click', redo);
 
         function redrawAll(strokes) {
+            console.log(strokes);
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             strokes.forEach(s => draw(s));
             }
@@ -77,12 +78,15 @@
             // console.log(currentStroke);
         }
         function drawing(e){
-            if(!isDrawing) return;
-            console.log('hi');
+            // console.log("mousemove", isDrawing);
+            if (!isDrawing || !currentStroke) return;
+            // console.log("i am drawing");
+            // console.log('hi');
             const rect = canvas.getBoundingClientRect();
             const point = {x:e.clientX - rect.left,y:e.clientY - rect.top};
             currentStroke.points.push(point);
-            console.log(point);
+            // console.log(point);
+            // console.log(currentStroke);
             draw(currentStroke);
             ws.send("DRAW_UPDATE", {
                 roomId: ws.ROOM_ID,
@@ -93,7 +97,7 @@
             });
         }
         function draw(stroke) {
-            console.log(stroke);
+            // console.log(stroke);
             const len = stroke.points.length;
             if ( len < 2) return;
             ctx.strokeStyle =
@@ -109,22 +113,21 @@
             ctx.stroke();
         }
         function stopDrawing() {
-            if (isDrawing) {
-                isDrawing = false;
-            }
+            if (!isDrawing || !currentStroke) return;
+            isDrawing = false;
             ws.send("DRAW_END", {
                 roomId: ws.ROOM_ID,
                 stroke: currentStroke
             });
+            currentStroke = null;
         }
         function undo() {
-        const lastStroke = [...strokes]
-        .reverse()
-        .find(stroke => stroke.userId === ws.USER.id);
-
-        if (!lastStroke) return;
-
         socket.emit("UNDO", {
             roomId: ws.ROOM_ID,
         });
+        }
+        function redo(){
+            socket.emit("REDO",{
+                roomId: ws.ROOM_ID,
+            });
         }
