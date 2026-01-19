@@ -33,7 +33,7 @@ io.on("connection", (socket) => {
   });
 
   socket.on("DRAW_UPDATE", ({ roomId, strokeFragment }) => {
-    socket.to(roomId).emit("STROKE_UPDATE", strokeFragment);
+    socket.to(roomId).emit("STROKE_UPDATE", strokeFragment.currentStroke);
   });
 
   socket.on("DRAW_END", ({ roomId, stroke }) => {
@@ -42,7 +42,7 @@ io.on("connection", (socket) => {
   });
 
   socket.on("UNDO", ({ roomId }) => {
-    console.log("UNDO clicked");
+    // console.log("UNDO clicked");
     const removedStroke = undo(roomId);
     if (removedStroke) {
       io.to(roomId).emit("UNDO_APPLIED", removedStroke.id);

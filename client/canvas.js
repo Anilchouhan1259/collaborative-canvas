@@ -60,7 +60,7 @@
         redoBtn.addEventListener('click', redo);
 
         function redrawAll(strokes) {
-            console.log(strokes);
+            // console.log(strokes);
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             strokes.forEach(s => draw(s));
             }
@@ -91,8 +91,7 @@
             ws.send("DRAW_UPDATE", {
                 roomId: ws.ROOM_ID,
                 strokeFragment: {
-                id: currentStroke.id,
-                point
+                currentStroke
                 }
             });
         }
