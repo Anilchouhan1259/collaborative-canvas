@@ -20,18 +20,12 @@ ws.on("USER_LEFT",(user)=>{
   }
 })
 ws.on("STROKE_COMMITTED", (stroke) => {
-
-  console.log(stroke,"commit");
    const index = strokes.findIndex(s => s.id === stroke.id);
-  console.log(strokes,"local stoke");
-
   if (index !== -1) {
     strokes[index] = stroke; 
   } else {
     strokes.push(stroke); 
   }
-
-  redrawAll(strokes);
 });
 
 ws.on("STROKE_UPDATE", (strokeFragment) => {
@@ -42,11 +36,9 @@ ws.on("STROKE_UPDATE", (strokeFragment) => {
     strokes.push(stroke);
   }else{
     const len = stroke.points.length
-    stroke.points.push(strokeFragment.points[len-1]);
+    stroke.points.push(strokeFragment.points[len]);
   }
-  
-
-  redrawAll(strokes);
+  drawSegment(stroke);
 });
 
 ws.on("UNDO_APPLIED", (strokeId) => {

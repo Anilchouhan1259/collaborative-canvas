@@ -54,9 +54,8 @@
         redoBtn.addEventListener('click', redo);
 
         function redrawAll(strokes) {
-            console.log("redraw is called");
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            strokes.forEach(s => draw(s));
+            strokes.forEach(s => drawFullStroke(s));
             }
         function renderUsers(){
             usersList.innerHTML = "";
@@ -65,7 +64,18 @@
             li.textContent = user.name;
             usersList.appendChild(li);
             });
-        }    
+        }  
+        function drawFullStroke(stroke) {
+        if (!stroke || stroke.points.length < 2) return;
+
+        ctx.strokeStyle = stroke.tool === "eraser" ? "#fff" : stroke.color;
+        ctx.lineWidth = stroke.width;
+
+        ctx.beginPath();
+        ctx.moveTo(stroke.points[0].x, stroke.points[0].y);
+        stroke.points.forEach(p => ctx.lineTo(p.x, p.y));
+        ctx.stroke();
+        }  
         function startDrawing(e) {
             isDrawing = true;
             const rect = canvas.getBoundingClientRect();
@@ -77,14 +87,13 @@
             tool: currentTool,
             points: [{ x:e.clientX - rect.left, y: e.clientY - rect.top, t: Date.now() }]
         };
-            // console.log(currentStroke);
         }
         function drawing(e){
             if (!isDrawing || !currentStroke) return;
             const rect = canvas.getBoundingClientRect();
             const point = {x:e.clientX - rect.left,y:e.clientY - rect.top};
             currentStroke.points.push(point);
-            draw(currentStroke);
+            drawSegment(currentStroke);
             ws.send("DRAW_UPDATE", {
                 roomId: ws.ROOM_ID,
                 strokeFragment: {
@@ -92,19 +101,19 @@
                 }
             });
         }
-        function draw(stroke) {
+        function drawSegment(stroke) {
             const len = stroke.points.length;
-            if ( len < 2) return;
-            ctx.strokeStyle =
-            stroke.tool === "eraser" ? "#ffffff" : stroke.color;
-            ctx.lineWidth = stroke.width;
-            ctx.strokeStyle = stroke.currentColor;
-            ctx.beginPath();
-            ctx.moveTo(stroke.points[0].x, stroke.points[0].y);
+            if (len < 2) return;
 
-            for (let p of stroke.points) {
-                ctx.lineTo(p.x, p.y);
-            }
+            const p1 = stroke.points[len - 2];
+            const p2 = stroke.points[len - 1];
+
+            ctx.strokeStyle = stroke.tool === "eraser" ? "#fff" : stroke.currentColor;
+            ctx.lineWidth = stroke.width;
+
+            ctx.beginPath();
+            ctx.moveTo(p1.x, p1.y);
+            ctx.lineTo(p2.x, p2.y);
             ctx.stroke();
         }
         function stopDrawing() {

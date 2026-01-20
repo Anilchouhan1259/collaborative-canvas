@@ -17,7 +17,6 @@ function addStroke(roomId, stroke) {
 
 function getStrokes(roomId) {
   const state = initRoom(roomId);
-  // console.log("called");
   return state.strokes;
 }
 
@@ -26,7 +25,6 @@ function undo(roomId) {
   if (state.strokes.length === 0) return null;
 
   const stroke = state.strokes.pop();
-  // console.log(state.strokes.length);
   state.undoStack.push(stroke);
   return stroke;
 }
