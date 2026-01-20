@@ -1,17 +1,34 @@
 const strokes = [];
-ws.on("SYNC_STATE", ({ strokes: serverStrokes }) => {
+const users = [];
+ws.on("SYNC_STATE", ({ strokes: serverStrokes ,users:serverUsers}) => {
   strokes.length = 0;
   strokes.push(...serverStrokes);
+  users.length=0;
+  users.push(...serverUsers);
+  renderUsers(users);
   redrawAll(strokes);
 });
-
+ws.on("USER_JOINED",(user)=>{
+  users.push(user);
+  renderUsers();
+})
+ws.on("USER_LEFT",(user)=>{
+  const index = users.findIndex(u => u.id === user.id);
+  if (index !== -1) {
+    users.splice(index, 1);
+    renderUsers();
+  }
+})
 ws.on("STROKE_COMMITTED", (stroke) => {
+
+  console.log(stroke,"commit");
    const index = strokes.findIndex(s => s.id === stroke.id);
+  console.log(strokes,"local stoke");
 
   if (index !== -1) {
-    strokes[index] = stroke; // ✅ replace temp stroke
+    strokes[index] = stroke; 
   } else {
-    strokes.push(stroke); // fallback
+    strokes.push(stroke); 
   }
 
   redrawAll(strokes);
@@ -24,10 +41,7 @@ ws.on("STROKE_UPDATE", (strokeFragment) => {
     stroke = {...strokeFragment};
     strokes.push(stroke);
   }else{
-    // console.log(stroke.points,"local stroke point");
-    // console.log(strokeFragment.points,"server stroke fragment");
     const len = stroke.points.length
-    // console.log(strokeFragment.points[len-1],"current point");
     stroke.points.push(strokeFragment.points[len-1]);
   }
   

@@ -6,7 +6,6 @@
         const sizeValue = document.getElementById('sizeValue');
         const brushBtn = document.getElementById('brushBtn');
         const eraserBtn = document.getElementById('eraserBtn');
-        const clearBtn = document.getElementById('clearBtn');
         const undoBtn = document.getElementById('undoBtn');
         const redoBtn = document.getElementById('redoBtn');
 
@@ -60,10 +59,18 @@
         redoBtn.addEventListener('click', redo);
 
         function redrawAll(strokes) {
-            // console.log(strokes);
+            console.log("redraw is called");
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             strokes.forEach(s => draw(s));
             }
+        function renderUsers(){
+            usersList.innerHTML = "";
+            users.forEach(user => {
+            const li = document.createElement("li");
+            li.textContent = user.name;
+            usersList.appendChild(li);
+            });
+        }    
         function startDrawing(e) {
             isDrawing = true;
             const rect = canvas.getBoundingClientRect();
@@ -78,15 +85,10 @@
             // console.log(currentStroke);
         }
         function drawing(e){
-            // console.log("mousemove", isDrawing);
             if (!isDrawing || !currentStroke) return;
-            // console.log("i am drawing");
-            // console.log('hi');
             const rect = canvas.getBoundingClientRect();
             const point = {x:e.clientX - rect.left,y:e.clientY - rect.top};
             currentStroke.points.push(point);
-            // console.log(point);
-            // console.log(currentStroke);
             draw(currentStroke);
             ws.send("DRAW_UPDATE", {
                 roomId: ws.ROOM_ID,
@@ -96,7 +98,6 @@
             });
         }
         function draw(stroke) {
-            // console.log(stroke);
             const len = stroke.points.length;
             if ( len < 2) return;
             ctx.strokeStyle =
