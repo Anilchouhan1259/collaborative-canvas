@@ -17,8 +17,6 @@ function removeUserFromRoom(socketId) {
     if (room.users.has(socketId)) {
       const user = room.users.get(socketId);
       room.users.delete(socketId);
-
-      // Cleanup empty room
       if (room.users.size === 0) {
         rooms.delete(roomId);
       }

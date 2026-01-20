@@ -3,8 +3,7 @@ function initRoom(roomId) {
   if (!drawingState.has(roomId)) {
     drawingState.set(roomId, {
       strokes: [],
-      undoStack: [],
-      redoStack: []
+      undoStack: []
     });
   }
   return drawingState.get(roomId);
@@ -12,7 +11,7 @@ function initRoom(roomId) {
 function addStroke(roomId, stroke) {
   const state = initRoom(roomId);
   state.strokes.push(stroke);
-  state.redoStack = []; 
+  state.undoStack.length=0; 
 }
 
 function getStrokes(roomId) {
@@ -32,7 +31,6 @@ function undo(roomId) {
 function redo(roomId) {
   const state = initRoom(roomId);
   if (state.undoStack.length === 0) return null;
-
   const stroke = state.undoStack.pop();
   state.strokes.push(stroke);
   return stroke;

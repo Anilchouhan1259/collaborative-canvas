@@ -50,6 +50,7 @@ io.on("connection", (socket) => {
 
   socket.on("REDO", ({ roomId }) => {
     const restoredStroke = redo(roomId);
+    console.log(restoredStroke);
     if (restoredStroke) {
       io.to(roomId).emit("REDO_APPLIED", restoredStroke);
     }

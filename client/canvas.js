@@ -107,8 +107,7 @@
 
             const p1 = stroke.points[len - 2];
             const p2 = stroke.points[len - 1];
-
-            ctx.strokeStyle = stroke.tool === "eraser" ? "#fff" : stroke.currentColor;
+            ctx.strokeStyle = stroke.tool === "eraser" ? "#fff" : stroke.color;
             ctx.lineWidth = stroke.width;
 
             ctx.beginPath();

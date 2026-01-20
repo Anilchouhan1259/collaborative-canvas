@@ -50,6 +50,7 @@ ws.on("UNDO_APPLIED", (strokeId) => {
 });
 
 ws.on("REDO_APPLIED", (stroke) => {
+  console.log(stroke);
   strokes.push(stroke);
   redrawAll(strokes);
 });
