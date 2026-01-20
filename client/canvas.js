@@ -50,11 +50,6 @@
             brushBtn.classList.remove('active');
         });
 
-        clearBtn.addEventListener('click', () => {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            saveState();
-        });
-
         undoBtn.addEventListener('click', undo);
         redoBtn.addEventListener('click', redo);
 
