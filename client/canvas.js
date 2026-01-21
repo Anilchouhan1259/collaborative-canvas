@@ -62,6 +62,7 @@
             users.forEach(user => {
             const li = document.createElement("li");
             li.textContent = user.name;
+            li.style.color = user.color;
             usersList.appendChild(li);
             });
         }  

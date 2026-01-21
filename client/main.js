@@ -9,6 +9,7 @@ ws.on("SYNC_STATE", ({ strokes: serverStrokes ,users:serverUsers}) => {
   redrawAll(strokes);
 });
 ws.on("USER_JOINED",(user)=>{
+  console.log(user);
   users.push(user);
   renderUsers();
 })
