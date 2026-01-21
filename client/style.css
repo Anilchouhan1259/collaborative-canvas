@@ -76,6 +76,20 @@
         input[type="range"] {
             width: 150px;
         }
+        #cursor-layer {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        }
+
+        .cursor {
+        position: absolute;
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        transform: translate(-50%, -50%);
+        opacity: 0.9;
+        }
 
         #canvas-container {
             background: white;
@@ -85,6 +99,7 @@
         }
 
         canvas {
+            position: relative;
             border: 2px solid #ddd;
             border-radius: 4px;
             display: block;

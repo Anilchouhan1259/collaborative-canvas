@@ -21,7 +21,6 @@ io.on("connection", (socket) => {
 
   socket.on("JOIN_ROOM", ({ roomId, user }) => {
     socket.join(roomId);
-
     const room = createRoom(roomId);
     room.users.set(socket.id, user);
 
@@ -50,19 +49,21 @@ io.on("connection", (socket) => {
 
   socket.on("REDO", ({ roomId }) => {
     const restoredStroke = redo(roomId);
-    console.log(restoredStroke);
     if (restoredStroke) {
       io.to(roomId).emit("REDO_APPLIED", restoredStroke);
     }
   });
 
-  socket.on("CURSOR_MOVE", ({ roomId, cursor }) => {
+  socket.on("CURSOR_MOVE", ({ roomId, cursor,userId }) => {
     socket.to(roomId).emit("CURSOR_UPDATE", {
       socketId: socket.id,
+      userId:userId,
       cursor
     });
   });
-
+  socket.on("CURSOR_HIDE", ({ roomId }) => {
+  socket.to(roomId).emit("CURSOR_HIDE", socket.id);
+});
   socket.on("disconnect", () => {
     const { roomId, user } = removeUserFromRoom(socket.id);
     if (roomId && user) {

@@ -26,7 +26,22 @@
         canvas.addEventListener('mousemove', drawing);
         canvas.addEventListener('mouseup', stopDrawing);
         canvas.addEventListener('mouseout', stopDrawing);
-
+        
+        canvas.addEventListener("pointermove", (e) => {
+        if (isDrawing) return;
+        const cursor = {
+            x: e.clientX,
+            y: e.clientY
+        };
+        ws.send("CURSOR_MOVE", {
+            roomId: ws.ROOM_ID,
+            userId: ws.USER.id,
+            cursor
+        });
+        });
+        canvas.addEventListener("mouseleave", () => {
+        ws.send("CURSOR_HIDE", { roomId: ws.ROOM_ID });
+        });
         colorPicker.addEventListener('change', (e) => {
             
             if (currentTool === 'brush') {
@@ -79,6 +94,7 @@
         }  
         function startDrawing(e) {
             isDrawing = true;
+            ws.send("CURSOR_HIDE", { roomId: ws.ROOM_ID });;
             const rect = canvas.getBoundingClientRect();
             currentStroke = {
             id: crypto.randomUUID(),
