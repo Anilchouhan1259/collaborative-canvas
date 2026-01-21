@@ -76,6 +76,7 @@
             usersList.innerHTML = "";
             users.forEach(user => {
             const li = document.createElement("li");
+            console.log(user)
             li.textContent = user.name;
             li.style.color = user.color;
             usersList.appendChild(li);
