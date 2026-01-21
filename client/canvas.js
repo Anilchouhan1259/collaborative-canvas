@@ -10,8 +10,7 @@
         const redoBtn = document.getElementById('redoBtn');
 
 
-        let stokeWidth = brushSize.value;     
-        sizeValue.textContent = stokeWidth;      
+        let stokeWidth = brushSize.value;        
 
       
         let isDrawing = false;
@@ -29,9 +28,10 @@
         
         canvas.addEventListener("pointermove", (e) => {
         if (isDrawing) return;
+        const rect = canvas.getBoundingClientRect();
         const cursor = {
-            x: e.clientX,
-            y: e.clientY
+            x: e.clientX - rect.left,
+            y: e.clientY - rect.top
         };
         ws.send("CURSOR_MOVE", {
             roomId: ws.ROOM_ID,
@@ -102,7 +102,7 @@
             color: currentColor,
             width: stokeWidth,
             tool: currentTool,
-            points: [{ x:e.clientX - rect.left, y: e.clientY - rect.top, t: Date.now() }]
+            points: [{ x:e.clientX - rect.left, y: e.clientY - rect.top }]
         };
         }
         function drawing(e){
